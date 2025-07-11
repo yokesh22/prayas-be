@@ -2,6 +2,7 @@ import { insertRegistration } from '../models/registrationModel.js';
 import { insertQRCodeRecord } from '../models/qrcodeModel.js';
 import { generateQRCode } from '../services/qrService.js';
 import { v4 as uuidv4 } from 'uuid';
+import CryptoJS from 'crypto-js';
 
 export async function handleRegister(req, res) {
   try {
@@ -12,7 +13,6 @@ export async function handleRegister(req, res) {
     }
 
     const orderid = uuidv4();
-
     const results = [];
 
     for (const visitor of visitors) {
@@ -22,7 +22,6 @@ export async function handleRegister(req, res) {
         return res.status(400).json({ message: 'Missing required fields in visitor data' });
       }
 
-      // Insert registration
       await insertRegistration({
         orderid,
         fullName,
@@ -33,10 +32,18 @@ export async function handleRegister(req, res) {
         visitDate,
       });
 
-      // Generate QR data and save
-      const qrData = `Phone: ${mobileNumber}, Name: ${fullName}, Order ID: ${orderid}, Village: ${village}`;
-      const qrCodeBase64 = await generateQRCode(qrData);
-      await insertQRCodeRecord(qrCodeBase64, mobileNumber);
+      // Prepare raw data and encrypt using phone number
+      const rawData = JSON.stringify({
+        phone: mobileNumber,
+        name: fullName,
+        orderid,
+        village,
+      });
+
+      const encrypted = CryptoJS.AES.encrypt(rawData, mobileNumber).toString();
+      console.log('Encrypted data:', encrypted);
+      const qrCodeBase64 = await generateQRCode(encrypted);
+      await insertQRCodeRecord(encrypted, mobileNumber);
 
       results.push({
         fullName,
