@@ -6,10 +6,7 @@ import registrationRoutes from './routes/register.js';
 dotenv.config();
 
 const app = express();
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://prayaas-ui.i4ulabs.com',
-];
+
 
 app.use(cors());
 app.use(express.json());
