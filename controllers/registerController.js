@@ -45,16 +45,17 @@ export async function handleRegister(req, res) {
       });
     }
 
-    return res.status(201).json({
+    return res.status(200).json({
+      status: 'success',
       message: 'All visitors registered successfully',
       orderid,
       data: results,
     });
   } catch (err) {
     if (err.code === 'ER_DUP_ENTRY') {
-      return res.status(409).json({ message: 'One or more phone numbers are already registered' });
+      return res.status(200).json({status: 'fail', message: 'One or more phone numbers are already registered' });
     }
     console.error(err);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({status: 'fail', message: 'Internal server error' });
   }
 }
