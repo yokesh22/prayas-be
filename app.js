@@ -12,7 +12,7 @@ app.use(cors());
 
 // Or restrict to a specific origin:
 app.use(cors({
-  origin: 'http://localhost:5173', // your frontend URL
+  origin: ['http://localhost:5173', 'https://prayaas-ui.i4ulabs.com'], // your frontend URL
   credentials: true
 }));
 
