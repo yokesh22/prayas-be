@@ -6,15 +6,21 @@ import registrationRoutes from './routes/register.js';
 dotenv.config();
 
 const app = express();
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://prayaas-ui.i4ulabs.com',
+];
 
-// Allow all origins (development)
-app.use(cors());
-
-// Or restrict to a specific origin:
 app.use(cors({
-  origin: '*', // your frontend URL
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
 }));
-
 app.use(express.json());
 
 app.use('/api', registrationRoutes);
