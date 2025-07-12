@@ -3,7 +3,7 @@ import { insertQRCodeRecord } from '../models/qrcodeModel.js';
 import { generateQRCode } from '../services/qrService.js';
 import { v4 as uuidv4 } from 'uuid';
 import CryptoJS from 'crypto-js';
-import { QR_ENCRYPTION_KEY } from '../config/constants.js';
+import { QR_ENCRYPTION_KEY } from '../constants.js';
 
 export async function handleRegister(req, res) {
   try {

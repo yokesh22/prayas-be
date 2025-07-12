@@ -1,13 +1,14 @@
 import CryptoJS from 'crypto-js';
-import { QR_ENCRYPTION_KEY } from '../config/constants.js';
+import { QR_ENCRYPTION_KEY } from '../constants.js';
+
 
 
 export async function handleQrcodeValidator(req, res) {
   console.log('QR code validation request received');
 
   const { encrypted, mobile } = req.query;
-
-  if (!encrypted || !mobile) {
+  console.log('encrypted:', encrypted);
+  if (!encrypted) {
     return res.status(400).json({
       status: 'fail',
       message: 'Missing parameters: encrypted or mobile',
@@ -37,6 +38,7 @@ export async function handleQrcodeValidator(req, res) {
     let parsedData;
     try {
       parsedData = JSON.parse(decryptedText);
+      console.log('Parsed Data:', parsedData);
     } catch (err) {
       return res.status(400).json({
         status: 'fail',
@@ -45,12 +47,12 @@ export async function handleQrcodeValidator(req, res) {
     }
 
     // Step 4: Validate mobile number match
-    if (parsedData.phone !== mobile) {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'Mobile number mismatch in decrypted QR data',
-      });
-    }
+    // if (parsedData.phone !== mobile) {
+    //   return res.status(400).json({
+    //     status: 'fail',
+    //     message: 'Mobile number mismatch in decrypted QR data',
+    //   });
+    // }
 
     // ✅ All good
     return res.status(200).json({

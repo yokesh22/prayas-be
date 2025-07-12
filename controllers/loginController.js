@@ -4,9 +4,9 @@ import { getStallNo } from '../models/loginModel.js';
 export async function handleLogin(req, res) {
   console.log('Login request received');
 
-  const { phone, stall } = req.body;
+  const { phone, stall, pin } = req.body;
     console.log('Request body:', req.body);
-  if (!phone || !stall) {
+  if (!phone || !stall || !pin) {
     return res.status(200).json({
       status: 'fail',
       message: 'Missing parameters',
@@ -15,10 +15,11 @@ export async function handleLogin(req, res) {
 
   try {
     // Step 1: check it is a valid stallno
-    const validStall = await getStallNo({ stallno: stall });
-    console.log('Valid Stall:', validStall);
+    const validStall = await getStallNo({ stallno: stall, pinno: pin, phoneno: phone });
+    console.log('Valid Stall:', validStall, validStall.length);
 
-    if (!validStall || validStall.length === 0) {
+    if (validStall && validStall.length === 0) {
+        console.log('Invalid stall number');
       return res.status(200).json({
         status: 'fail',
         message: 'Invalid stall number',
