@@ -1,0 +1,1 @@
+export const QR_ENCRYPTION_KEY = 'prayas2025';

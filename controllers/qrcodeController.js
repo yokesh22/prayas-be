@@ -1,4 +1,6 @@
 import CryptoJS from 'crypto-js';
+import { QR_ENCRYPTION_KEY } from '../config/constants.js';
+
 
 export async function handleQrcodeValidator(req, res) {
   console.log('QR code validation request received');
@@ -18,7 +20,9 @@ export async function handleQrcodeValidator(req, res) {
     console.log('Decoded Encrypted:', decodedEncrypted);
 
     // Step 2: Attempt decryption using mobile as key
-    const bytes = CryptoJS.AES.decrypt(decodedEncrypted, mobile);
+    // const bytes = CryptoJS.AES.decrypt(decodedEncrypted, mobile);
+    const bytes = CryptoJS.AES.decrypt(decodedEncrypted, QR_ENCRYPTION_KEY);
+
     const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
     console.log('Decrypted Text:', decryptedText);
 

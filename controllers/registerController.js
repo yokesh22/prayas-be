@@ -3,6 +3,7 @@ import { insertQRCodeRecord } from '../models/qrcodeModel.js';
 import { generateQRCode } from '../services/qrService.js';
 import { v4 as uuidv4 } from 'uuid';
 import CryptoJS from 'crypto-js';
+import { QR_ENCRYPTION_KEY } from '../config/constants.js';
 
 export async function handleRegister(req, res) {
   try {
@@ -40,7 +41,8 @@ export async function handleRegister(req, res) {
         village,
       });
 
-      const encrypted = CryptoJS.AES.encrypt(rawData, mobileNumber).toString();
+      const encrypted = CryptoJS.AES.encrypt(rawData, QR_ENCRYPTION_KEY).toString();
+
       console.log('Encrypted data:', encrypted);
       const qrCodeBase64 = await generateQRCode(encrypted);
       await insertQRCodeRecord(encrypted, mobileNumber);
